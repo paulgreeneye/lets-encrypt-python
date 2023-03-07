@@ -13,7 +13,7 @@ def get_credentials():
     return {'host': os.getenv('F5_HOST'), 'user': os.getenv('F5_USER'), 'pass': os.getenv('F5_PASS')}
 
 def instantiate_bigip(credentials):
-    return BIGIP(credentials.get('host'), credentials.get('user'), credentials.get('pass'))
+    return BIGIP(credentials.get('host'), credentials.get('user'), credentials.get('pass'), session_verify=False)
 
 def deploy_challenge(args):
     br = instantiate_bigip(get_credentials())
