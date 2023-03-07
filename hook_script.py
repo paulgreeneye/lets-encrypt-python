@@ -30,13 +30,14 @@ def deploy_challenge(args):
         logger.info(' + (hook) datagroup dg_le_challenge added.')
     if br.exist('/mgmt/tm/ltm/rule/rule_le_challenge'):
         vip = br.load(f'/mgmt/tm/ltm/virtual/{f5_http}')
-        if '/Common/rule_le_challenge' not in vip.properties['rules']:
-            if vip.properties.get('rules') is None:
-                vip.properties['rules'] = ['rule_le_challenge']
-            elif not '/mgmt/tm/ltm/rule/rule_le_challenge' in vip.properties['rules']:
-                vip.properties['rules'].insert(0,'rule_le_challenge')
-            br.save(vip)
-            logger.info(f' + (hook) Challenge rule added to virtual {f5_http}.')
+        if vip.properties.get('rules') is None:
+            vip.properties['rules'] = ['rule_le_challenge']
+        elif '/Common/rule_le_challenge' not in vip.properties['rules']:
+            vip.properties['rules'].insert(0,'rule_le_challenge')
+        elif not '/mgmt/tm/ltm/rule/rule_le_challenge' in vip.properties['rules']:
+            vip.properties['rules'].insert(0,'rule_le_challenge')
+        br.save(vip)
+        logger.info(f' + (hook) Challenge rule added to virtual {f5_http}.')
     dg = br.load('/mgmt/tm/ltm/data-group/internal/dg_le_challenge')
     dg.properties['records'].append({'name':args[1],'data':args[2]})
     br.save(dg)
